@@ -2,6 +2,7 @@ package entities;
 
 import java.awt.Graphics;
 import java.awt.Graphics2D;
+import java.awt.RenderingHints;
 import java.awt.image.BufferedImage;
 
 import flappybird.Game;
@@ -24,6 +25,9 @@ public class Player extends Entity{
 	private byte maxIndex  = 2;
 	public BufferedImage[] sprites;
 	
+	private double gravity = 0.4;
+	private double vspd = 0;
+
 	public int getPontos() {
 		return (int)this.pontos;
 	}
@@ -54,13 +58,7 @@ public class Player extends Entity{
 		
 		movement();	
 		animation();
-		checkCollision();
 		updateCamera();
-	}
-	
-	public void checkCollision() {
-		
-
 	}
 	
 	public void animation() {
@@ -77,16 +75,30 @@ public class Player extends Entity{
 	
 	public void movement() {
 		
-		if (!isPressed) {
-			y+=2;
-		
-		}else { 
-			if ( y > 0)
-				y-=2;
-			
+		vspd+=gravity;
+		if(isPressed)
+		{
+			vspd = -3;
 		}
 		
-		if (y > Game.getHEIGHT()  )
+		else {
+			
+			int signVsp = 0;
+			if(vspd >= 0)
+			{
+				signVsp = 2;
+			}else  {
+				signVsp = -2;
+			}
+
+			y = y+signVsp;
+			
+			vspd = 0;
+		}
+		
+		y = y + vspd;
+		
+		if(y > Game.getHEIGHT() || y < 0) 
 			Game.gamestate = Gamestate.gameover;
 			
 	}
@@ -101,15 +113,17 @@ public class Player extends Entity{
 	public void render(Graphics g) {
 		Graphics2D g2 = (Graphics2D) g;
 		
+		g2.setRenderingHint(RenderingHints.KEY_INTERPOLATION, RenderingHints.VALUE_INTERPOLATION_BILINEAR);
+		
 		if(!isPressed) {
 			g2.rotate(Math.toRadians(2), this.getX() + width/2, this.getY() + height/2);
-			g.drawImage(sprites[index],(int)x,(int)y, null);
+			g2.drawImage(sprites[index],(int)x,(int)y, null);
 			g2.rotate(Math.toRadians(-2), this.getX() + width/2, this.getY() + height/2);
 			
 		} else {
-			g2.rotate(Math.toRadians(-2), this.getX() + width/2, this.getY() + height/2);
-			g.drawImage(sprites[index],(int)x,(int)y, null);
-			g2.rotate(Math.toRadians(2), this.getX() + width/2, this.getY() + height/2);
+			g2.rotate(Math.toRadians(-16), this.getX() + width/2, this.getY() + height/2);
+			g2.drawImage(sprites[index],(int)x,(int)y, null);
+			g2.rotate(Math.toRadians(16), this.getX() + width/2, this.getY() + height/2);
 		}
 	}
 	

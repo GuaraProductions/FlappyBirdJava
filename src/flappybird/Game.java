@@ -275,6 +275,8 @@ public class Game extends Canvas implements Runnable,KeyListener{
 		}
 		
 		Graphics g = layer.getGraphics();
+		
+		
 		g.setColor(new Color(122,102,255));
 		g.fillRect(0, 0,WIDTH,HEIGHT);
 		
@@ -348,8 +350,7 @@ public class Game extends Canvas implements Runnable,KeyListener{
 	}
 
 	public void keyTyped(KeyEvent e) {
-		if(e.getKeyCode() == KeyEvent.VK_SPACE) 
-			System.out.println("PULA CARALHO");
+
 	}
 	
 }
